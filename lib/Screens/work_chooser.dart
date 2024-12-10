@@ -61,15 +61,24 @@ class WorkChooser extends StatelessWidget {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: double.infinity,
-                  height: screenHeight * 0.3,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50),
+                child: Stack(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: screenHeight * 0.3,
+                      color: AppColors.primaryColor,
                     ),
-                  ),
+                    Container(
+                      width: screenWidth,
+                      height: screenHeight * 0.3,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(50),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Positioned.fill(
@@ -82,7 +91,8 @@ class WorkChooser extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.white),
+                            icon: const Icon(Icons.arrow_back,
+                                color: Colors.white),
                             onPressed: () => Navigator.pop(context),
                           ),
                           const SizedBox(width: 48), // Spacer for alignment
@@ -107,7 +117,8 @@ class WorkChooser extends StatelessWidget {
                       child: TableCalendar(
                         firstDay: DateTime.utc(2000, 1, 1),
                         lastDay: DateTime.utc(2100, 12, 31),
-                        focusedDay: workState.selectedDay ?? initialDate,
+                        focusedDay:
+                        workState.selectedDay ?? initialDate,
                         calendarFormat: CalendarFormat.week,
                         startingDayOfWeek: StartingDayOfWeek.monday,
                         selectedDayPredicate: (day) =>
@@ -246,39 +257,36 @@ class WorkChooser extends StatelessWidget {
   }
 
   Widget _timeSlots(WorkState workState) {
-    return Visibility(
-     // visible: workState.showTimeSlotDropdown, // Only show when the button is pressed
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 2,
-              blurRadius: 10,
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Select Time Slots:",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            ...['8-10', '10-12', '12-2', '2-4', '4-6', '6-8'].map((slot) {
-              return CheckboxListTile(
-                value: workState.selectedTimeSlots.contains(slot),
-                onChanged: (isSelected) =>
-                    workState.toggleTimeSlot(slot, isSelected!),
-                title: Text(slot),
-              );
-            }),
-          ],
-        ),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 10,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Select Time Slots:",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          ...['8-10', '10-12', '12-2', '2-4', '4-6', '6-8'].map((slot) {
+            return CheckboxListTile(
+              value: workState.selectedTimeSlots.contains(slot),
+              onChanged: (isSelected) =>
+                  workState.toggleTimeSlot(slot, isSelected!),
+              title: Text(slot),
+            );
+          }),
+        ],
       ),
     );
   }
