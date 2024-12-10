@@ -1,8 +1,11 @@
+import 'package:camera/camera.dart';
 import 'package:ds_service/AppsColor/appColor.dart';
-import 'package:ds_service/Auth/IntroScreen.dart';
+import 'package:ds_service/Auth/intro_screen.dart';
+import 'package:ds_service/Auth/start_screen.dart';
+import 'package:ds_service/main.dart';
 import 'package:flutter/material.dart';
 
-import '../Resources/AppImages.dart';
+import '../Resources/app_images.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -26,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     // Optionally, navigate to the next screen after the splash screen completes
     Future.delayed(const Duration(seconds: 4), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const IntroScreen()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StartScreen()));
     });
   }
 
@@ -39,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,  // Set the background color for the entire screen
+      backgroundColor: Colors.white,  // Set the background color for the entire screen
       body: Stack(
         children: [
           // Center the image
@@ -48,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               mainAxisSize: MainAxisSize.min,  // Adjust to minimize extra vertical space
               children: [
                 Image.asset(
-                  appImages.splash,
+                  AppImages.logo,
                   width: 150,  // Adjust the size of the image as needed
                   height: 150,
                 ),
@@ -61,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                       return LinearProgressIndicator(
                         borderRadius: BorderRadius.circular(10),
                         value: _animationController.value,  // Progress based on animation value (0 to 1)
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),  // The color of the progressing part
+                        valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryColorlight),  // The color of the progressing part
                         backgroundColor: AppColors.greyColor,  // Background color of the progress bar
                         minHeight: 8,  // Adjust the height of the progress bar
                       );

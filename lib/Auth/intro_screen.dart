@@ -1,9 +1,10 @@
+import 'package:camera/camera.dart';
 import 'package:ds_service/AppsColor/appColor.dart';
-import 'package:ds_service/Auth/LoginScreen.dart';
-import 'package:ds_service/Resources/AppImages.dart';
+import 'package:ds_service/Resources/app_images.dart';
 import 'package:flutter/material.dart';
 class IntroScreen extends StatefulWidget {
-  const IntroScreen({super.key});
+  final List<CameraDescription> cameras;
+  const IntroScreen({super.key,required this.cameras});
   @override
   _IntroScreenState createState() => _IntroScreenState();
 }
@@ -30,9 +31,9 @@ class _IntroScreenState extends State<IntroScreen> {
           PageView(
             controller: _pageController,
             children: [
-              buildIntroPage(appImages.introFirstImage, "Earn double ","And fulfill your dreams"),
-              buildIntroPage(appImages.introSecondImage, "Govt certified training","Get certified by Skill India"),
-              buildIntroPage(appImages.introThirdIimage, "Free insurance and easy loans","For you and your family"),
+              buildIntroPage(AppImages.introFirstImage, "Earn double ","And fulfill your dreams"),
+              buildIntroPage(AppImages.introSecondImage, "Govt certified training","Get certified by Skill India"),
+              buildIntroPage(AppImages.introThirdIimage, "Free insurance and easy loans","For you and your family"),
             ],
           ),
           // Linear dots indicator on the left
@@ -68,10 +69,10 @@ class _IntroScreenState extends State<IntroScreen> {
                   );
                 } else {
                   // Navigate to home or next screen
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginScreen()), // Replace with your next screen
-                  );
+                  // Navigator.pushReplacement(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) =>  LoginScreen(cameras:cameras)), // Replace with your next screen
+                  // );
                 }
               },
             ),
