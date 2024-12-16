@@ -52,7 +52,7 @@ class _MainScreenState extends State<MainScreen> {
                   children: [
                     _buildHomePage(screenWidth, screenHeight),
                     _jobsPage(screenWidth, screenHeight),
-                    _userShortListedIntrestedPage(screenWidth, screenHeight),
+                    _jonsUpcomingPage(screenWidth, screenHeight),
                     _androidPage(screenWidth, screenHeight),
                     _buildAccountPage(screenWidth, screenHeight),
                   ],
@@ -174,8 +174,8 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _userShortListedIntrestedPage(double screenWidth, double screenHeight) {
-    return const Text("Interested"); // Replace with your actual Notification screen content
+  Widget _jonsUpcomingPage(double screenWidth, double screenHeight) {
+    return const Text("Interested");
   }
 
   Widget _buildHomePage(double screenWidth, double screenHeight) {
@@ -338,7 +338,7 @@ class _MainScreenState extends State<MainScreen> {
                                       mainAxisSize: MainAxisSize.min,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Row(
+                                        const Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                            Text("8:30pm",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),),
@@ -349,15 +349,15 @@ class _MainScreenState extends State<MainScreen> {
                                             )
                                           ],
                                         ),
-                                        Text("Test Kunal Dadar West Dad...",style: TextStyle(color: Colors.white,fontSize: 10),),
-                                        Text("Job not closed",style: TextStyle(color: Colors.white,fontSize: 13,fontWeight: FontWeight.w600),),
-                                        SizedBox(height: 5,),
+                                        const Text("Test Kunal Dadar West Dad...",style: TextStyle(color: Colors.white,fontSize: 10),),
+                                        const Text("Job not closed",style: TextStyle(color: Colors.white,fontSize: 13,fontWeight: FontWeight.w600),),
+                                        const SizedBox(height: 5,),
                                         Row(
                                           children: [
-                                            ImageIcon(
+                                            const ImageIcon(
                                               color:Colors.white,
                                                 AssetImage(AppImages.Telephone,)),
-                                            SizedBox(width: 20,),
+                                            const SizedBox(width: 20,),
                                             Container(
                                               height: 35,
                                               width: 240,
@@ -367,11 +367,11 @@ class _MainScreenState extends State<MainScreen> {
                                               ),
                                               child: TextField(
                                                 controller: _msgController,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 12,
                                                 ),
-                                                decoration: InputDecoration(
+                                                decoration: const InputDecoration(
                                                   hintText: "Type your message",
                                                   hintStyle: TextStyle(
                                                     fontSize: 10,
@@ -382,13 +382,13 @@ class _MainScreenState extends State<MainScreen> {
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(width: 5,),
+                                            const SizedBox(width: 5,),
                                             InkWell(
                                               onTap: (){
                                                 _msgController.clear();
                                                 FocusScope.of(context).unfocus();
                                               },
-                                                child: Icon(Icons.schedule_send_outlined,color: Colors.white,size: 35,))
+                                                child: const Icon(Icons.schedule_send_outlined,color: Colors.white,size: 35,))
 
 
                                           ],
@@ -422,15 +422,263 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildAccountPage(double screenWidth, double screenHeight) {
-    return const Text("Account"); // Replace with your actual Notification screen content
+    return DefaultTabController(
+      length: 4,
+      child: Column(
+        children: [
+          Expanded(
+            child: Stack(
+              children: [
+                // Background Image
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: screenHeight * 0.237,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(AppImages.rectangleVerify),
+                        fit: BoxFit.cover, // Ensures the image covers the container
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Notifications and Popup Menu
+                Positioned(
+                  top: screenHeight * 0.04,
+                  right: screenWidth * 0.05,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.notifications_none, color: Colors.white),
+                      const SizedBox(width: 5),
+                      PopupMenuButton<String>(
+                        icon: const Icon(Icons.menu, color: Colors.white),
+                        onSelected: (value) {
+                          // Handle menu item selection
+                          if (kDebugMode) {
+                            print('$value selected');
+                          }
+                        },
+                        itemBuilder: (context) => [
+                          const PopupMenuItem(
+                            value: 'Option 1',
+                            child: Row(
+                              children: [
+                                Icon(Icons.settings, size: 18, color: Colors.black),
+                                SizedBox(width: 10),
+                                Text('Option 1'),
+                              ],
+                            ),
+                          ),
+                          const PopupMenuItem(
+                            value: 'Option 2',
+                            child: Row(
+                              children: [
+                                Icon(Icons.info, size: 18, color: Colors.black),
+                                SizedBox(width: 10),
+                                Text('Option 2'),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                // TabBar Positioned Below Background Image
+                Positioned(
+                  top: screenHeight * 0.15,
+                  left: screenWidth * 0.08,
+                  right: screenWidth * 0.08,
+                  child: Container(
+                    height: screenHeight * 0.04,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 1.5),
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                    child: SegmentedTabControl(
+                      barDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(0),
+                          border: Border.all(color: Colors.white)),
+                      indicatorDecoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                      tabTextColor: Colors.white,
+                      selectedTabTextColor: AppColors.primaryColor,
+                      textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800),
+                      tabs: const [
+                        SegmentTab(label: 'All'),
+                        SegmentTab(label: 'Today'),
+                        SegmentTab(label: 'Tomorrow'),
+                        SegmentTab(label: 'Week'),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // TabBarView Content
+                Positioned.fill(
+                  top: screenHeight * 0.23,
+                  child: TabBarView(
+                    children: [
+                      SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 10),
+
+                            // ListView Section
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: screenHeight * 0.025, vertical: screenHeight * 0.01),
+                              itemCount: 10,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  margin: EdgeInsets.only(bottom: screenHeight * 0.035),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        decoration: const BoxDecoration(
+                                          color: AppColors.primaryColor,
+                                          borderRadius: BorderRadius.only(
+                                            bottomRight: Radius.circular(8),
+                                            bottomLeft: Radius.circular(8),
+                                          ),
+                                        ),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.refresh_outlined, color: Colors.white),
+                                              Text(
+                                                "Revisit request",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w800),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: screenHeight * 0.01),
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 5.0),
+                                        child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              "11:00 AM 21 Aug",
+                                              style: TextStyle(color: AppColors.primaryColor),
+                                            )),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: screenWidth * 0.022,
+                                            height: screenHeight * 0.11,
+                                            decoration: const BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(8),
+                                                  bottomRight: Radius.circular(8)),
+                                            ),
+                                          ),
+                                          const Padding(
+                                            padding: EdgeInsets.only(left: 15.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Complaint : Swarthy dey",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.w700,
+                                                      fontSize: 16),
+                                                ),
+                                                Text(
+                                                  "Club Town Garden Phase 1",
+                                                  style: TextStyle(
+                                                      color: Colors.black38,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 16),
+                                                ),
+                                                Text(
+                                                  "Block-5, Club towns Gardens,",
+                                                  style: TextStyle(
+                                                      color: Colors.black38,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 16),
+                                                ),
+                                                Text(
+                                                  "Kolkata, West Bengal 700076,India ",
+                                                  style: TextStyle(
+                                                      color: Colors.black38,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          SizedBox(width: screenWidth * 0.1),
+                                          const ImageIcon(AssetImage(AppImages.Telephone), color: Colors.black),
+                                          SizedBox(width: screenWidth * 0.06),
+                                          const Icon(Icons.telegram_sharp, color: Colors.black),
+                                        ],
+                                      ),
+                                      SizedBox(height: screenHeight * 0.01),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Center(child: Text("Content for Tab 2")),
+                      const Center(child: Text("Content for Tab 3")),
+                      const Center(child: Text("Content for Tab 4")),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
+
   Widget _jobsPage(double screenWidth, double screenHeight) {
-    return const Text("Jobs"); // Replace with your actual Notification screen content
+    return const Text("Jobs");
   }
 
   Widget _androidPage(double screenWidth, double screenHeight) {
-    return const Text("Android"); // Replace with your actual Notification screen content
+    return const Text("Android");
   }
 }
 

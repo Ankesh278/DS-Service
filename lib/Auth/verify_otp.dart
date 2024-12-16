@@ -7,18 +7,16 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import '../AppsColor/appColor.dart';
 
-
 class VerifyOtpScreen extends StatefulWidget {
-
   final String phoneNumber;
 
   const VerifyOtpScreen({super.key, required this.phoneNumber});
 
   @override
-  _VerifyOtpScreenState createState() => _VerifyOtpScreenState();
+  VerifyOtpScreenState createState() => VerifyOtpScreenState();
 }
 
-class _VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
+class VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
   TextEditingController otpController = TextEditingController();
   StreamController<ErrorAnimationType>? errorController;
   bool hasError = false;
@@ -92,19 +90,18 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
     if (phoneNumber.length < 10) {
       return phoneNumber;
     }
-
     return phoneNumber.replaceRange(2, phoneNumber.length - 4, '******');
   }
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
+    //final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-
+          // Background Image
           Positioned(
             top: 0,
             left: 0,
@@ -112,59 +109,45 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
             child: Image.asset(
               AppImages.rectangleVerify,
               fit: BoxFit.cover,
-              height: MediaQuery.of(context).size.height * 0.23,
+              height: screenHeight * 0.23,
             ),
           ),
 
-          // Back button
+          // Back button and Header
           Positioned(
             top: MediaQuery.of(context).padding.top + 10,
             left: 0,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_back_ios_new_outlined, color: Colors.white),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 18.0),
-                      child: Text(
-                        "Confirm OTP",
-                        style: TextStyle(fontSize: 16, color: AppColors.greyColor, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 18.0),
-                      child: Text(
-                        "OTP has been sent to ${maskPhoneNumber(widget.phoneNumber)}",
-                        style: const TextStyle(fontSize: 12, color: AppColors.greyColor, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-
-                  ],
-                )
-
+                IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new_outlined, color: Colors.white),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 18.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Confirm OTP", style: TextStyle(fontSize: 16, color: AppColors.greyColor, fontWeight: FontWeight.w600)),
+                      Text("OTP has been sent to ${maskPhoneNumber(widget.phoneNumber)}", style: const TextStyle(fontSize: 12, color: AppColors.greyColor, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
 
-          // Main content
+          // Main content (OTP input)
           SingleChildScrollView(
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.4),
+                    SizedBox(height: screenHeight * 0.4),
 
+                    // PinCode TextField for OTP input
                     PinCodeTextField(
                       appContext: context,
                       length: 4,
@@ -201,15 +184,13 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
                           hasError = false;
                         });
                       },
-                      beforeTextPaste: (text) {
-                        return false;
-                      },
                     ),
-                     SizedBox(height: screenHeight*0.0),
+
+                    // Timer and Resend OTP Button
+                    SizedBox(height: screenHeight * 0.05),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(width: screenWidth*0.05,),
                         const Icon(Icons.watch_later_outlined, color: Colors.black, size: 16),
                         TextButton(
                           onPressed: isButtonDisabled ? null : resendOtp,
@@ -218,32 +199,21 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
                             style: TextStyle(color: isButtonDisabled ? Colors.grey : AppColors.primaryColor, fontSize: 12),
                           ),
                         ),
-                        const Spacer(),
-                        Text(
-                          " $_countdown s",
-                          style: const TextStyle(color: AppColors.greyColor),
-                        ),
-                        SizedBox(width: screenWidth*0.05,),
+                        Text(" $_countdown s", style: const TextStyle(color: AppColors.greyColor)),
                       ],
                     ),
-                    SizedBox(width: screenWidth*0.1,),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: verifyOtp,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor,
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          minimumSize: const Size(230, 30),
-                          shape: const StadiumBorder(),
-                        ),
-                        child: const Text(
-                          'Verify OTP',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
+
+                    // Verify OTP Button
+                    SizedBox(height: screenHeight * 0.1),
+                    ElevatedButton(
+                      onPressed: verifyOtp,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        minimumSize: const Size(230, 30),
+                        shape: const StadiumBorder(),
                       ),
+                      child: const Text('Verify OTP', style: TextStyle(color: Colors.white, fontSize: 12)),
                     ),
                   ],
                 ),
@@ -253,8 +223,5 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
         ],
       ),
     );
-
   }
 }
-
-

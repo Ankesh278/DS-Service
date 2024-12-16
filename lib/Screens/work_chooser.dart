@@ -1,6 +1,6 @@
 import 'package:ds_service/AppsColor/appColor.dart';
 import 'package:ds_service/Resources/app_images.dart';
-import 'package:ds_service/provider/CalendarProvider/workingDayProvider.dart';
+import 'package:ds_service/provider/CalendarProvider/working_day_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -123,8 +123,10 @@ class WorkChooser extends StatelessWidget {
                       enabledDayPredicate: (day) => day.isAfter(
                           DateTime.now().subtract(const Duration(days: 1))),
                       onDaySelected: (selectedDay, focusedDay) {
+
                         workState.setSelectedDay(selectedDay);
                         workState.setWorkingToday(false); // Reset the working status
+
                       },
                       headerVisible: false,
                       calendarStyle: const CalendarStyle(
@@ -155,158 +157,62 @@ class WorkChooser extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                  if (workState.selectedDay != null && !workState.isWorkingToday)
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 10),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                            color: Colors.white, width: 1.5),
-                      ),
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 20),
-                          const Text(
-                            "Are you working today?",
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 16),
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            icon: const Icon(Icons.check, color: Colors.white),
-                            onPressed: () {
-                              workState.setWorkingToday(true);
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close, color: Colors.white),
-                            onPressed: () {
-                              workState.setWorkingToday(false);
-                            },
-                          ),
-                          const SizedBox(width: 10),
-                        ],
-                      ),
+                 Container(
+                    width: screenWidth*0.7,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                  if (workState.isWorkingToday) _timeSlots(workState),
-                  if (!workState.isWorkingToday)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "You are on leave today.",
-                        style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
+                    child: Row(
+                      children: [
+                        const Text("Mark your Calendar",style: TextStyle(color: Colors.white,fontSize: 14),),
+                        const Spacer(),
+                        Container(decoration:const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white
+                        ),child: const Icon(Icons.keyboard_arrow_up_outlined,color: Colors.black))
+                      ],
                     ),
-                  if (workState.selectedDay != null)
-                    workState.isWorkingToday
-                        ? Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      child: Column(
-                        children: [
-                          _statusContainer("You are working today", true),
-                          const SizedBox(height: 10),
-                          _statusContainer(
-                              "You are working ${workState.totalWorkingHours} hours",
-                              true),
-                        ],
-                      ),
-                    )
-                        : Container(),
+                  ),
+
+                  const SizedBox(height: 10),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8)
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(AppImages.working),
+                        ),
+                        const Text("Are you working?",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 13),),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton(onPressed: () async {
+                              }, child: const Text("No")),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton(onPressed: (){}, child: const Text("Yes")),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+
                 ],
               ),
             ),
-            if (workState.isWorkingToday && workState.selectedTimeSlots.isNotEmpty)
-              Positioned(
-                bottom: 20,
-                left: 20,
-                right: 20,
-                child: ElevatedButton(
-                  onPressed: () {
-                    workState.setWorkingToday(true);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                            "You have set today's calendar successfully!"),
-                        backgroundColor: Colors.green,
-                        duration: Duration(seconds: 3),
-                      ),
-                    );
-                  },
-                  child: const Text("Submit"),
-                ),
-              ),
           ],
         );
       }),
-    );
-  }
-
-  Widget _statusContainer(String message, bool isPositive) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-            color: isPositive ? Colors.green : Colors.red, width: 1.5),
-      ),
-      child: Row(
-        children: [
-          Icon(isPositive ? Icons.check_circle : Icons.cancel,
-              color: isPositive ? Colors.green : Colors.red),
-          const SizedBox(width: 10),
-          Text(
-            message,
-            style: TextStyle(
-              color: isPositive ? Colors.green : Colors.red,
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _timeSlots(WorkState workState) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 10,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Select Time Slots:",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          ...['8-10', '10-12', '12-2', '2-4', '4-6', '6-8'].map((slot) {
-            return CheckboxListTile(
-              value: workState.selectedTimeSlots.contains(slot),
-              onChanged: (isSelected) {
-                workState.toggleTimeSlot(slot, isSelected!);
-              },
-              title: Text(slot),
-            );
-          }).toList(),
-        ],
-      ),
     );
   }
 }

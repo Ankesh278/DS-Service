@@ -23,6 +23,7 @@ class _PhotoVerificationState extends State<PhotoVerification> {
     initializeCamera();
   }
 
+  // Initialize the camera
   Future<void> initializeCamera() async {
     cameras = await availableCameras();
     final frontCamera = cameras.firstWhere(
@@ -39,6 +40,7 @@ class _PhotoVerificationState extends State<PhotoVerification> {
     });
   }
 
+  // Dispose of the camera controller when the screen is disposed
   void disposeCamera() {
     if (_isCameraInitialized) {
       _cameraController.dispose();
@@ -56,6 +58,7 @@ class _PhotoVerificationState extends State<PhotoVerification> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    //final isIOS = Platform.isIOS;
 
     return Scaffold(
       body: Stack(
@@ -198,7 +201,7 @@ class _PhotoVerificationState extends State<PhotoVerification> {
                     ),
                   ],
                 ),
-               SizedBox(height: screenHeight*0.04),
+              SizedBox(height: screenHeight * 0.04),
             ],
           ),
         ],
