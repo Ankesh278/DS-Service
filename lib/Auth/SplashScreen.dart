@@ -1,5 +1,5 @@
 import 'package:camera/camera.dart';
-import 'package:ds_service/AppsColor/appColor.dart';
+import 'package:ds_service/AppsColor/app_color.dart';
 import 'package:ds_service/Auth/intro_screen.dart';
 import 'package:ds_service/Auth/start_screen.dart';
 import 'package:ds_service/main.dart';
@@ -11,62 +11,55 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-
   @override
   void initState() {
     super.initState();
-
-    // Initialize the animation controller for the progress bar
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3),  // Duration of the splash screen
-    )..forward(); // Start the animation
-
-    // Optionally, navigate to the next screen after the splash screen completes
-    Future.delayed(const Duration(seconds: 4), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StartScreen()));
+      duration: const Duration(seconds: 3),
+    )..forward();
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const StartScreen()));
     });
   }
-
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
+    double screenHeight=MediaQuery.of(context).size.height;
+    double screenWidth=MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.white,  // Set the background color for the entire screen
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Center the image
           Center(
             child: Column(
-              mainAxisSize: MainAxisSize.min,  // Adjust to minimize extra vertical space
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset(
                   AppImages.logo,
-                  width: 150,  // Adjust the size of the image as needed
-                  height: 150,
+                  width: screenWidth*0.5,
+                  height: screenHeight*0.3,
                 ),
-                // Progress bar immediately below the image
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                  padding:  EdgeInsets.symmetric(horizontal: screenWidth*0.2),
                   child: AnimatedBuilder(
                     animation: _animationController,
                     builder: (context, child) {
                       return LinearProgressIndicator(
                         borderRadius: BorderRadius.circular(10),
-                        value: _animationController.value,  // Progress based on animation value (0 to 1)
-                        valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryColorlight),  // The color of the progressing part
-                        backgroundColor: AppColors.greyColor,  // Background color of the progress bar
-                        minHeight: 8,  // Adjust the height of the progress bar
+                        value: _animationController.value,
+                        valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryColorLight),
+                        backgroundColor: AppColors.greyColor,
+                        minHeight: 8,
                       );
                     },
                   ),

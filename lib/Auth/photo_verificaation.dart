@@ -1,12 +1,10 @@
 import 'dart:io';
+import 'package:ds_service/Screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:ds_service/Resources/app_images.dart';
-import 'package:ds_service/Screens/account_centre.dart';
-
 class PhotoVerification extends StatefulWidget {
   const PhotoVerification({super.key});
-
   @override
   State<PhotoVerification> createState() => _PhotoVerificationState();
 }
@@ -22,8 +20,6 @@ class _PhotoVerificationState extends State<PhotoVerification> {
     super.initState();
     initializeCamera();
   }
-
-  // Initialize the camera
   Future<void> initializeCamera() async {
     cameras = await availableCameras();
     final frontCamera = cameras.firstWhere(
@@ -39,42 +35,34 @@ class _PhotoVerificationState extends State<PhotoVerification> {
       _isCameraInitialized = true;
     });
   }
-
-  // Dispose of the camera controller when the screen is disposed
   void disposeCamera() {
     if (_isCameraInitialized) {
       _cameraController.dispose();
       _isCameraInitialized = false;
     }
   }
-
   @override
   void dispose() {
     disposeCamera();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    //final isIOS = Platform.isIOS;
-
     return Scaffold(
       body: Stack(
         children: [
-          // Background Image
           Positioned(
             top: 0,
             left: 0,
             right: 0,
             child: Image.asset(
-              AppImages.rectangleVerify, // Replace with your image asset
+              AppImages.rectangleVerify,
               fit: BoxFit.cover,
               height: screenHeight * 0.23,
             ),
           ),
-          // Back Button and "Selfie for Verify" text
           Positioned(
             top: screenHeight * 0.08,
             left: screenWidth * 0.05,
@@ -105,7 +93,6 @@ class _PhotoVerificationState extends State<PhotoVerification> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Camera preview or captured image
               Center(
                 child: Container(
                   margin: EdgeInsets.only(top: screenHeight * 0.25),
@@ -116,7 +103,7 @@ class _PhotoVerificationState extends State<PhotoVerification> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.blueAccent.withOpacity(0.2),
+                        color: Colors.blueAccent.withValues(alpha: 0.6),
                         blurRadius: 10,
                         offset: const Offset(0, 5),
                       ),
@@ -157,12 +144,11 @@ class _PhotoVerificationState extends State<PhotoVerification> {
                   }
                 },
                 child: CircleAvatar(
-                  radius: 30,
+                  radius: screenWidth*0.1,
                   child: Image.asset(AppImages.cameraCircle),
                 ),
               ),
               SizedBox(height: screenHeight * 0.05),
-              // Retake and Done Buttons
               if (_capturedImage != null)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -174,11 +160,11 @@ class _PhotoVerificationState extends State<PhotoVerification> {
                         });
                       },
                       icon: const Icon(Icons.refresh, color: Colors.white),
-                      label: const Text('Retake'),
+                      label:  const Text('Retake'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.lightBlueAccent,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(screenWidth*0.07),
                         ),
                       ),
                     ),
@@ -187,7 +173,7 @@ class _PhotoVerificationState extends State<PhotoVerification> {
                         disposeCamera();
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const AccountCentre()),
+                          MaterialPageRoute(builder: (context) => const MainScreen()),
                         );
                       },
                       icon: const Icon(Icons.check_circle, color: Colors.white),
@@ -195,7 +181,7 @@ class _PhotoVerificationState extends State<PhotoVerification> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.lightGreenAccent.shade700,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(screenWidth*0.07),
                         ),
                       ),
                     ),

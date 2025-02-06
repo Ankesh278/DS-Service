@@ -1,5 +1,5 @@
 
-import 'package:ds_service/AppsColor/appColor.dart';
+import 'package:ds_service/AppsColor/app_color.dart';
 import 'package:ds_service/Auth/login_screen.dart';
 import 'package:ds_service/Resources/app_images.dart';
 import 'package:flutter/foundation.dart';
@@ -7,14 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
-
-
   @override
-  _StartScreenState createState() => _StartScreenState();
+  StartScreenState createState() => StartScreenState();
 }
-
-class _StartScreenState extends State<StartScreen> {
-
+class StartScreenState extends State<StartScreen> {
   @override
   void initState() {
     super.initState();
@@ -26,7 +22,6 @@ class _StartScreenState extends State<StartScreen> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +38,7 @@ class _StartScreenState extends State<StartScreen> {
           ),
           Positioned.fill(
             child: Container(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.6),
             ),
           ),
           Positioned(
@@ -66,12 +61,12 @@ class _StartScreenState extends State<StartScreen> {
           ),
           Positioned.fill(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 70),
+              padding:  EdgeInsets.symmetric(horizontal: screenWidth*0.1, vertical: screenHeight*0.1),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                      margin: const EdgeInsets.only(top: 30),
+                      margin:  EdgeInsets.only(top: screenHeight*0.1),
                       child: Image.asset(AppImages.logo))
                 ],
               ),
@@ -84,9 +79,9 @@ class _StartScreenState extends State<StartScreen> {
             right: 0,
             child: Container(
               height: screenHeight*0.54,
-              decoration: const BoxDecoration(
+              decoration:  BoxDecoration(
                 color: AppColors.primaryColor,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(screenWidth*0.1),topRight: Radius.circular(screenWidth*0.1))
               ),
               child: Center(
                 child: Container(
@@ -103,7 +98,7 @@ class _StartScreenState extends State<StartScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(screenWidth*0.1),
                       ),
                     ),
                     child: const Text('GET STARTED',style: TextStyle(color: AppColors.primaryColor),),

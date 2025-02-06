@@ -1,4 +1,4 @@
-import 'package:ds_service/AppsColor/appColor.dart';
+import 'package:ds_service/AppsColor/app_color.dart';
 import 'package:ds_service/Auth/verify_otp.dart';
 import 'package:ds_service/Resources/app_images.dart';
 import 'package:flutter/foundation.dart';
@@ -8,21 +8,17 @@ import 'package:sms_autofill/sms_autofill.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-
   @override
   LoginScreenState createState() => LoginScreenState();
 }
-
 class LoginScreenState extends State<LoginScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
   @override
   void initState() {
     super.initState();
     _fetchPhoneNumber();
   }
-
   Future<void> _fetchPhoneNumber() async {
     try {
       String? phoneNumber = await SmsAutoFill().hint;
@@ -35,12 +31,10 @@ class LoginScreenState extends State<LoginScreen> {
       }
     }
   }
-
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -64,7 +58,7 @@ class LoginScreenState extends State<LoginScreen> {
                     children: [
                       SizedBox(height: screenHeight * 0.3),
                       _buildPhoneInputField(),
-                      const SizedBox(height: 10),
+                       SizedBox(height: screenHeight*0.02),
                       _buildWhatsappInfo(),
                       SizedBox(height: screenHeight * 0.18),
                       _buildLoginButton(),
@@ -81,6 +75,8 @@ class LoginScreenState extends State<LoginScreen> {
 
   // Phone Input Field
   Widget _buildPhoneInputField() {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return TextFormField(
       controller: _phoneController,
       cursorColor: AppColors.primaryColor,
@@ -93,14 +89,14 @@ class LoginScreenState extends State<LoginScreen> {
       ],
       decoration: InputDecoration(
         prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
-        prefixIcon: const Padding(
-          padding: EdgeInsets.only(left: 20.0, right: 3.0),
+        prefixIcon:  Padding(
+          padding: EdgeInsets.only(left: screenWidth*0.05, right: screenWidth*0.01),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('🇮🇳', style: TextStyle(fontSize: 24)),
-              SizedBox(width: 10),
-              Text(
+              const Text('🇮🇳', style: TextStyle(fontSize: 24)),
+              SizedBox(width: screenWidth*0.02),
+              const Text(
                 '+91',
                 style: TextStyle(fontSize: 16, color: Colors.black),
               ),
@@ -109,21 +105,21 @@ class LoginScreenState extends State<LoginScreen> {
         ),
         hintText: 'Enter number',
         hintStyle: const TextStyle(color: Colors.black26),
-        fillColor: AppColors.greyColor.withOpacity(1.0),
+        fillColor: AppColors.greyColor.withValues(alpha: 0.8),
         filled: true,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(screenWidth*0.1),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(screenWidth*0.1),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(screenWidth*0.1),
           borderSide: BorderSide.none,
         ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        contentPadding:  EdgeInsets.symmetric(vertical: screenHeight*0.018, horizontal: screenWidth*0.05),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -135,8 +131,6 @@ class LoginScreenState extends State<LoginScreen> {
       },
     );
   }
-
-  // WhatsApp Info Text
   Widget _buildWhatsappInfo() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -153,12 +147,14 @@ class LoginScreenState extends State<LoginScreen> {
       ],
     );
   }
-
   // Login Button
   Widget _buildLoginButton() {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return Center(
       child: ElevatedButton(
         onPressed: () {
+          FocusScope.of(context).unfocus();
           if (_formKey.currentState?.validate() == true) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Logging in...')),
@@ -173,8 +169,8 @@ class LoginScreenState extends State<LoginScreen> {
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primaryColor,
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          minimumSize: const Size(230, 30),
+          padding:  EdgeInsets.symmetric(vertical: screenHeight*0.013),
+          minimumSize:  Size(screenWidth*0.6, screenHeight*0.02),
           shape: const StadiumBorder(),
         ),
         child: const Text(

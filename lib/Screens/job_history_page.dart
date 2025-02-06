@@ -1,4 +1,4 @@
-import 'package:ds_service/AppsColor/appColor.dart';
+import 'package:ds_service/AppsColor/app_color.dart';
 import 'package:ds_service/Resources/app_images.dart';
 import 'package:flutter/material.dart';
 
@@ -16,17 +16,12 @@ class JobHistoryPageState extends State<JobHistoryPage> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-
-    // Full list of items
     final items = List.generate(10, (index) => "Item $index");
-
-    // Displayed items based on the expanded state
     final displayedItems = _isExpanded ? items : items.take(2).toList();
 
     return Scaffold(
       body: Stack(
         children: [
-          // Background images
           Positioned(
             left: 0,
             top: -screenHeight * 0.05,
@@ -41,8 +36,6 @@ class JobHistoryPageState extends State<JobHistoryPage> {
             right: 0,
             child: Image.asset(AppImages.ellipseRight),
           ),
-
-          // Back button with title
           Positioned(
             left: screenWidth*0.06,
             top: screenHeight * 0.05,
@@ -68,8 +61,6 @@ class JobHistoryPageState extends State<JobHistoryPage> {
               ],
             ),
           ),
-
-          // Job list with "View More"/"View Less" button
           Positioned(
             top: screenHeight * 0.25,
             bottom: 0,
@@ -77,10 +68,9 @@ class JobHistoryPageState extends State<JobHistoryPage> {
             left: 0,
             child: ListView.builder(
               padding:  EdgeInsets.symmetric(vertical: screenHeight*0.01,horizontal: screenWidth*0.1),
-              itemCount: displayedItems.length + 1, // Extra for the button
+              itemCount: displayedItems.length + 1,
               itemBuilder: (context, index) {
                 if (index == displayedItems.length) {
-                  // "View More"/"View Less" Button
                   return Center(
                     child: TextButton(
                       onPressed: () {
@@ -109,7 +99,7 @@ class JobHistoryPageState extends State<JobHistoryPage> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
+                        color: Colors.grey.withValues(alpha: 0.6),
                         spreadRadius: 1,
                         blurRadius: 5,
                         offset: const Offset(0, 3),
@@ -119,7 +109,6 @@ class JobHistoryPageState extends State<JobHistoryPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Timestamp
                        Padding(
                         padding: EdgeInsets.only(
                           top: screenHeight*0.007,

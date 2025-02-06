@@ -196,7 +196,7 @@ class _AccountCentreState extends State<AccountCentre> {
           _buildMenuItem(
             icon: Icons.ac_unit_sharp,
             title: "My hub",
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const MainScreen())),
+            onTap: () {},
           ),
           _buildDivider(),
           _buildMenuItem(icon: Icons.eight_k_outlined, title: "Credits", onTap: () {}),

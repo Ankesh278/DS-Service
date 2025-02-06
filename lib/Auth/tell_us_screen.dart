@@ -1,19 +1,18 @@
-
-import 'package:ds_service/AppsColor/appColor.dart';
+import 'package:ds_service/AppsColor/app_color.dart';
 import 'package:ds_service/Resources/app_images.dart';
-import 'package:ds_service/TermsAndConditions/TermsAcceptanceScreen.dart';
+import 'package:ds_service/TermsAndConditions/terms_acceptance_screen.dart';
 import 'package:flutter/material.dart';
 
 class TellUsScreen extends StatefulWidget {
   const TellUsScreen({super.key});
 
   @override
-  _TellUsScreenState createState() => _TellUsScreenState();
+  TellUsScreenState createState() => TellUsScreenState();
 }
 
-class _TellUsScreenState extends State<TellUsScreen> {
+class TellUsScreenState extends State<TellUsScreen> {
   final _formKey = GlobalKey<FormState>();
- final  TextEditingController nameController=TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   String? workList;
   String? workCityList;
 
@@ -47,32 +46,39 @@ class _TellUsScreenState extends State<TellUsScreen> {
       body: Stack(
         children: [
           Positioned(
-              top: 0,
-              right: 0,
-              child: Image.asset(AppImages.ellipseRight)),
+              top: 0, right: 0, child: Image.asset(AppImages.ellipseRight)),
           Positioned(
-              top: screenHeight*0.07,
-              left: screenWidth*0.02,
-              child: IconButton(onPressed: (){
-            Navigator.pop(context);
-          }, icon: const Icon(Icons.arrow_back_ios))),
+              top: screenHeight * 0.07,
+              left: screenWidth * 0.02,
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back_ios))),
           Positioned(
-              top: screenHeight*0.15,
-              left: screenWidth*0.15,
-              child: const Text("Tell us about yourself!",style: TextStyle(color: AppColors.primaryColor,fontSize: 18,fontWeight: FontWeight.w800),)),
+              top: screenHeight * 0.15,
+              left: screenWidth * 0.15,
+              child: const Text(
+                "Tell us about yourself!",
+                style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800),
+              )),
           Positioned(
-            bottom: 0,
+              bottom: 0,
               left: 0,
               right: 0,
               child: Container(
-                height: screenHeight*0.6,
-                decoration: const BoxDecoration(
+                height: screenHeight * 0.6,
+                decoration: BoxDecoration(
                     color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.only(topRight: Radius.circular(40),topLeft: Radius.circular(40))
-                ),
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(screenWidth * 0.1),
+                        topLeft: Radius.circular(screenWidth * 0.1))),
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(screenWidth * 0.035),
                     child: Form(
                       key: _formKey,
                       child: Column(
@@ -81,7 +87,8 @@ class _TellUsScreenState extends State<TellUsScreen> {
                           SizedBox(height: screenHeight * 0.05),
                           Container(
                             height: screenHeight * 0.10,
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: screenWidth * 0.035),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -103,21 +110,24 @@ class _TellUsScreenState extends State<TellUsScreen> {
                                       filled: true,
                                       fillColor: Colors.transparent,
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(
+                                            screenWidth * 0.03),
                                         borderSide: const BorderSide(
                                           color: Colors.white,
                                           width: 1.5,
                                         ),
                                       ),
                                       enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(
+                                            screenWidth * 0.01),
                                         borderSide: const BorderSide(
                                           color: Colors.white,
                                           width: 1.5,
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(
+                                            screenWidth * 0.01),
                                         borderSide: const BorderSide(
                                           color: Colors.white,
                                           width: 2.0,
@@ -140,22 +150,19 @@ class _TellUsScreenState extends State<TellUsScreen> {
                                   ),
                                 ),
                                 // Add error message spacing
-                                const SizedBox(height: 5),
+                                SizedBox(height: screenHeight * 0.02),
                               ],
                             ),
                           ),
-
-
                           SizedBox(height: screenHeight * 0.05),
-
                           Stack(
                             clipBehavior: Clip.none,
                             children: [
-
                               Container(
                                 height: screenHeight * 0.06,
                                 padding: const EdgeInsets.only(left: 10),
-                                margin: const EdgeInsets.symmetric(horizontal: 15),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
@@ -166,11 +173,13 @@ class _TellUsScreenState extends State<TellUsScreen> {
                                 child: PopupMenuButton<String>(
                                   onSelected: (String value) {
                                     setState(() {
+                                      FocusScope.of(context).unfocus();
                                       workList = value;
                                     });
                                   },
                                   itemBuilder: (BuildContext context) {
-                                    return works.map<PopupMenuEntry<String>>((String value) {
+                                    return works.map<PopupMenuEntry<String>>(
+                                        (String value) {
                                       return PopupMenuItem<String>(
                                         value: value,
                                         child: Text(
@@ -229,7 +238,8 @@ class _TellUsScreenState extends State<TellUsScreen> {
                                 left: 25,
                                 top: -10,
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 4),
                                   color: AppColors.primaryColor,
                                   child: const Text(
                                     "What's your profession?",
@@ -243,19 +253,15 @@ class _TellUsScreenState extends State<TellUsScreen> {
                               ),
                             ],
                           ),
-
-
                           SizedBox(height: screenHeight * 0.05),
-
-
                           Stack(
                             clipBehavior: Clip.none,
                             children: [
-
                               Container(
                                 height: screenHeight * 0.06,
                                 padding: const EdgeInsets.only(left: 10),
-                                margin: const EdgeInsets.symmetric(horizontal: 15),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
@@ -266,11 +272,13 @@ class _TellUsScreenState extends State<TellUsScreen> {
                                 child: PopupMenuButton<String>(
                                   onSelected: (String value) {
                                     setState(() {
+                                      FocusScope.of(context).unfocus();
                                       workCityList = value;
                                     });
                                   },
                                   itemBuilder: (BuildContext context) {
-                                    return cities.map<PopupMenuEntry<String>>((String value) {
+                                    return cities.map<PopupMenuEntry<String>>(
+                                        (String value) {
                                       return PopupMenuItem<String>(
                                         value: value,
                                         child: Text(
@@ -329,7 +337,8 @@ class _TellUsScreenState extends State<TellUsScreen> {
                                 left: 25,
                                 top: -10,
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 4),
                                   color: AppColors.primaryColor,
                                   child: const Text(
                                     "What's your home located?",
@@ -343,19 +352,20 @@ class _TellUsScreenState extends State<TellUsScreen> {
                               ),
                             ],
                           ),
-
                           Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 2),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Transform.scale(
-                                    scale: 1,
+                                    scale: 1.2,
                                     child: Checkbox(
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(
+                                            screenWidth * 0.025),
                                       ),
                                       side: const BorderSide(
                                         color: Colors.white,
@@ -363,7 +373,6 @@ class _TellUsScreenState extends State<TellUsScreen> {
                                       ),
                                       activeColor: Colors.white,
                                       focusColor: Colors.white,
-                                      autofocus: true,
                                       checkColor: AppColors.primaryColor,
                                       value: isTermsAccepted,
                                       onChanged: (value) {
@@ -373,16 +382,18 @@ class _TellUsScreenState extends State<TellUsScreen> {
                                       },
                                     ),
                                   ),
-                                  const Expanded(
+                                  Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text(
+                                        const Text(
                                           "By continuing, you accept NEED TO ASSIST company's",
-                                          style: TextStyle(fontSize: 8, color: Colors.white),
+                                          style: TextStyle(
+                                              fontSize: 8, color: Colors.white),
                                         ),
-                                        SizedBox(height: 4),
-                                        Text(
+                                        SizedBox(height: screenHeight * 0.005),
+                                        const Text(
                                           'Terms & Privacy Policy, ensuring secure collaboration',
                                           style: TextStyle(
                                             fontSize: 8,
@@ -397,61 +408,71 @@ class _TellUsScreenState extends State<TellUsScreen> {
                               ),
                             ),
                           ),
-
                           SizedBox(height: screenHeight * 0.02),
-
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: screenWidth * 0.05),
                             child: Center(
                               child: SizedBox(
                                 width: double.infinity,
                                 height: screenHeight * 0.05,
                                 child: ElevatedButton(
                                   onPressed: () {
+                                    FocusScope.of(context).unfocus();
                                     if (_formKey.currentState!.validate() &&
                                         isTermsAccepted &&
                                         workList != null &&
                                         workCityList != null) {
-
                                       Navigator.pushAndRemoveUntil(
                                         context,
-                                        MaterialPageRoute(builder: (context) => const TermsAcceptanceScreen()),
-                                            (Route<dynamic> route) => false,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const TermsAcceptanceScreen()),
+                                        (Route<dynamic> route) => false,
                                       );
                                     } else {
-                                      ScaffoldMessenger.of(context).showMaterialBanner(
-                                         MaterialBanner(
-
-                                           actions: [
-                                             TextButton(
-                                               onPressed: () {
-                                                 ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                                               },
-                                               child: const Text(
-                                                 "DISMISS",
-                                                 style: TextStyle(color: Colors.red),
-                                               ),
-                                             ),
-                                           ],
+                                      ScaffoldMessenger.of(context)
+                                          .showMaterialBanner(
+                                        MaterialBanner(
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                ScaffoldMessenger.of(context)
+                                                    .hideCurrentMaterialBanner();
+                                              },
+                                              child: const Text(
+                                                "DISMISS",
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                            ),
+                                          ],
                                           backgroundColor: Colors.white,
                                           content: const Text(
-                                              'Please fill in all fields and accept terms',style: TextStyle(color: Colors.red),),
+                                            'Please fill in all fields and accept terms',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
                                         ),
-
                                       );
-
-                                      Future.delayed(const Duration(seconds: 3), () {
-                                        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                                      Future.delayed(const Duration(seconds: 3),
+                                          () {
+                                        ScaffoldMessenger.of(context)
+                                            .hideCurrentMaterialBanner();
                                       });
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(
+                                          screenWidth * 0.05),
                                     ),
                                   ),
-                                  child: const Text('Continue',style: TextStyle(color: AppColors.primaryColor),),
+                                  child: const Text(
+                                    'Continue',
+                                    style: TextStyle(
+                                        color: AppColors.primaryColor),
+                                  ),
                                 ),
                               ),
                             ),
@@ -462,7 +483,6 @@ class _TellUsScreenState extends State<TellUsScreen> {
                   ),
                 ),
               ))
-
         ],
       ),
     );

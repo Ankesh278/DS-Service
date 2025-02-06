@@ -18,7 +18,7 @@ class AppImages{
   static const String  arrowGif='assets/images/arrowGif.gif';
   static const String  pouch='assets/images/Pouch.png';
   static const String  profile='assets/images/profile.png';
-  static const String  Navigation='assets/images/Navigation.png';
-  static const String  Telephone='assets/images/Telephone.png';
+  static const String  navigation='assets/images/Navigation.png';
+  static const String  telephone='assets/images/Telephone.png';
   static const String  working='assets/images/working.png';
 }

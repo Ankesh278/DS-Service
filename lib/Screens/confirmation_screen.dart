@@ -1,5 +1,5 @@
 
-import 'package:ds_service/AppsColor/appColor.dart';
+import 'package:ds_service/AppsColor/app_color.dart';
 import 'package:ds_service/Resources/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -103,7 +103,7 @@ class ConfirmationScreenState extends State<ConfirmationScreen> {
                           margin: EdgeInsets.only(left: screenWidth*0.13,top: screenWidth*0.04),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
-                              color: AppColors.primaryColorlight
+                              color: AppColors.primaryColorLight
                           ),
                           child: Center(child: Text("Accept",style: TextStyle(color: Colors.white.withOpacity(0.7))
                             ,)),
