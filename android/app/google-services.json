@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "344130744435",
+    "project_id": "needtoassistvendor",
+    "storage_bucket": "needtoassistvendor.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344130744435:android:d1c0f2b8b9df61a12c3a06",
+        "android_client_info": {
+          "package_name": "com.DSWale.ds_service"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcBM3R0J1yHNaw-iRcPpZANm7KQussr1E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

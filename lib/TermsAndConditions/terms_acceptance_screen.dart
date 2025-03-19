@@ -79,7 +79,7 @@ class TermsAcceptanceScreen extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>const PhotoVerification()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> SelfieScreen()));
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 5),

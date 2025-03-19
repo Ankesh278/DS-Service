@@ -66,7 +66,8 @@ class JobHistoryPageState extends State<JobHistoryPage> {
             bottom: 0,
             right: 0,
             left: 0,
-            child: ListView.builder(
+            child:
+            ListView.builder(
               padding:  EdgeInsets.symmetric(vertical: screenHeight*0.01,horizontal: screenWidth*0.1),
               itemCount: displayedItems.length + 1,
               itemBuilder: (context, index) {

@@ -2,6 +2,7 @@ import 'package:animated_segmented_tab_control/animated_segmented_tab_control.da
 import 'package:ds_service/AppsColor/app_color.dart';
 import 'package:ds_service/Resources/app_images.dart';
 import 'package:ds_service/Screens/account_centre.dart';
+import 'package:ds_service/Screens/booking_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -234,7 +235,6 @@ class _MainScreenState extends State<MainScreen> {
                     ],
                   ),
                 ),
-
                 // TabBar positioned below the background image
                 Positioned(
                   top: screenHeight * 0.15,
@@ -269,171 +269,171 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                   ),
                 ),
-                Positioned.fill(
-                  top: screenHeight * 0.23, //177
-                  child: TabBarView(
-                    children: [
-                      SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: screenWidth * 0.06,
-                                  top: screenHeight * 0.02),
-                              width: screenWidth * 0.22,
-                              height: screenHeight * 0.034,
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryColor,
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: Colors.black),
-                              ),
-                              child: const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(0.0),
-                                  child: Text(
-                                    "Today",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-
-                            // ListView Section
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: screenHeight * 0.025,
-                                  vertical: screenHeight * 0.01),
-                              itemCount: 10,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  margin: EdgeInsets.only(
-                                      bottom: screenHeight * 0.035),
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryColor,
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withValues(alpha: 0.6),
-                                        blurRadius: 6,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Expanded(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "8:30pm",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            Spacer(),
-                                            ImageIcon(
-                                                color: Colors.white,
-                                                AssetImage(
-                                                    AppImages.navigation))
-                                          ],
-                                        ),
-                                        const Text(
-                                          "Test Kunal Dadar West Dad...",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 10),
-                                        ),
-                                        const Text(
-                                          "Job not closed",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          children: [
-                                            const ImageIcon(
-                                                color: Colors.white,
-                                                AssetImage(
-                                                  AppImages.telephone,
-                                                )),
-                                            const SizedBox(
-                                              width: 20,
-                                            ),
-                                            Container(
-                                              height: 35,
-                                              width: 240,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              child: TextField(
-                                                controller: _msgController,
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12,
-                                                ),
-                                                decoration:
-                                                    const InputDecoration(
-                                                  hintText: "Type your message",
-                                                  hintStyle: TextStyle(
-                                                    fontSize: 10,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  border: InputBorder.none,
-                                                  contentPadding:
-                                                      EdgeInsets.symmetric(
-                                                          vertical: 13,
-                                                          horizontal:
-                                                              10), // Centers the text vertically
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            InkWell(
-                                                onTap: () {
-                                                  _msgController.clear();
-                                                  FocusScope.of(context)
-                                                      .unfocus();
-                                                },
-                                                child: const Icon(
-                                                  Icons.schedule_send_outlined,
-                                                  color: Colors.white,
-                                                  size: 35,
-                                                ))
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Center(child: Text("Content for Tab 2")),
-                      const Center(child: Text("Content for Tab 3")),
-                      const Center(child: Text("Content for Tab 4")),
-                    ],
-                  ),
-                ),
+                BookingScreen()
+                // Positioned.fill(
+                //   top: screenHeight * 0.23, //177
+                //   child: TabBarView(
+                //     children: [
+                //       SingleChildScrollView(
+                //         child: Column(
+                //           crossAxisAlignment: CrossAxisAlignment.start,
+                //           children: [
+                //             Container(
+                //               margin: EdgeInsets.only(
+                //                   left: screenWidth * 0.06,
+                //                   top: screenHeight * 0.02),
+                //               width: screenWidth * 0.22,
+                //               height: screenHeight * 0.034,
+                //               decoration: BoxDecoration(
+                //                 color: AppColors.primaryColor,
+                //                 borderRadius: BorderRadius.circular(20),
+                //                 border: Border.all(color: Colors.black),
+                //               ),
+                //               child: const Center(
+                //                 child: Padding(
+                //                   padding: EdgeInsets.all(0.0),
+                //                   child: Text(
+                //                     "Today",
+                //                     style: TextStyle(color: Colors.white),
+                //                   ),
+                //                 ),
+                //               ),
+                //             ),
+                //             const SizedBox(height: 10),
+                //             // ListView Section
+                //             ListView.builder(
+                //               shrinkWrap: true,
+                //               physics: const NeverScrollableScrollPhysics(),
+                //               padding: EdgeInsets.symmetric(
+                //                   horizontal: screenHeight * 0.025,
+                //                   vertical: screenHeight * 0.01),
+                //               itemCount: 10,
+                //               itemBuilder: (context, index) {
+                //                 return Container(
+                //                   margin: EdgeInsets.only(
+                //                       bottom: screenHeight * 0.035),
+                //                   padding: const EdgeInsets.all(12),
+                //                   decoration: BoxDecoration(
+                //                     color: AppColors.primaryColor,
+                //                     borderRadius: BorderRadius.circular(8),
+                //                     boxShadow: [
+                //                       BoxShadow(
+                //                         color: Colors.grey.withValues(alpha: 0.6),
+                //                         blurRadius: 6,
+                //                         offset: const Offset(0, 3),
+                //                       ),
+                //                     ],
+                //                   ),
+                //                   child: Expanded(
+                //                     child: Column(
+                //                       mainAxisSize: MainAxisSize.min,
+                //                       crossAxisAlignment:
+                //                           CrossAxisAlignment.start,
+                //                       children: [
+                //                         const Row(
+                //                           crossAxisAlignment:
+                //                               CrossAxisAlignment.start,
+                //                           children: [
+                //                             Text(
+                //                               "8:30pm",
+                //                               style: TextStyle(
+                //                                   color: Colors.white,
+                //                                   fontWeight: FontWeight.w500),
+                //                             ),
+                //                             Spacer(),
+                //                             ImageIcon(
+                //                                 color: Colors.white,
+                //                                 AssetImage(
+                //                                     AppImages.navigation))
+                //                           ],
+                //                         ),
+                //                         const Text(
+                //                           "Test Kunal Dadar West Dad...",
+                //                           style: TextStyle(
+                //                               color: Colors.white,
+                //                               fontSize: 10),
+                //                         ),
+                //                         const Text(
+                //                           "Job not closed",
+                //                           style: TextStyle(
+                //                               color: Colors.white,
+                //                               fontSize: 13,
+                //                               fontWeight: FontWeight.w600),
+                //                         ),
+                //                         const SizedBox(
+                //                           height: 5,
+                //                         ),
+                //                         Row(
+                //                           children: [
+                //                             const ImageIcon(
+                //                                 color: Colors.white,
+                //                                 AssetImage(
+                //                                   AppImages.telephone,
+                //                                 )),
+                //                             const SizedBox(
+                //                               width: 20,
+                //                             ),
+                //                             Container(
+                //                               height: 30,
+                //                               width: 212,
+                //                               decoration: BoxDecoration(
+                //                                 color: Colors.white,
+                //                                 borderRadius:
+                //                                     BorderRadius.circular(8),
+                //                               ),
+                //                               child: TextField(
+                //                                 controller: _msgController,
+                //                                 style: const TextStyle(
+                //                                   color: Colors.black,
+                //                                   fontSize: 12,
+                //                                 ),
+                //                                 decoration:
+                //                                     const InputDecoration(
+                //                                   hintText: "Type your message",
+                //                                   hintStyle: TextStyle(
+                //                                     fontSize: 10,
+                //                                     color: Colors.grey,
+                //                                   ),
+                //                                   border: InputBorder.none,
+                //                                   contentPadding:
+                //                                       EdgeInsets.symmetric(
+                //                                           vertical: 13,
+                //                                           horizontal:
+                //                                               10), // Centers the text vertically
+                //                                 ),
+                //                               ),
+                //                             ),
+                //                             const SizedBox(
+                //                               width: 5,
+                //                             ),
+                //                             InkWell(
+                //                                 onTap: () {
+                //                                   _msgController.clear();
+                //                                   FocusScope.of(context)
+                //                                       .unfocus();
+                //                                 },
+                //                                 child: const Icon(
+                //                                   Icons.send,
+                //                                   color: Colors.white,
+                //                                   size: 30,
+                //                                 ))
+                //                           ],
+                //                         )
+                //                       ],
+                //                     ),
+                //                   ),
+                //                 );
+                //               },
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //       const Center(child: Text("Content for Tab 2")),
+                //       const Center(child: Text("Content for Tab 3")),
+                //       const Center(child: Text("Content for Tab 4")),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),

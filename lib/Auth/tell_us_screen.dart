@@ -2,9 +2,14 @@ import 'package:ds_service/AppsColor/app_color.dart';
 import 'package:ds_service/Resources/app_images.dart';
 import 'package:ds_service/TermsAndConditions/terms_acceptance_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../Myscreens/hub_choose.dart';
 
 class TellUsScreen extends StatefulWidget {
-  const TellUsScreen({super.key});
+
+  const TellUsScreen({super.key, });
 
   @override
   TellUsScreenState createState() => TellUsScreenState();
@@ -12,7 +17,7 @@ class TellUsScreen extends StatefulWidget {
 
 class TellUsScreenState extends State<TellUsScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController nameController = TextEditingController();
+
   String? workList;
   String? workCityList;
 
@@ -35,11 +40,13 @@ class TellUsScreenState extends State<TellUsScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    nameController.dispose();
+
   }
 
   @override
   Widget build(BuildContext context) {
+    final HubController controller = Get.put(HubController());
+
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -94,6 +101,7 @@ class TellUsScreenState extends State<TellUsScreen> {
                               children: [
                                 Expanded(
                                   child: TextFormField(
+                                    controller: controller.nameController,
                                     keyboardType: TextInputType.text,
                                     decoration: InputDecoration(
                                       labelText: "What's your full name?",
@@ -174,7 +182,7 @@ class TellUsScreenState extends State<TellUsScreen> {
                                   onSelected: (String value) {
                                     setState(() {
                                       FocusScope.of(context).unfocus();
-                                      workList = value;
+                                      controller.selectedProfession.value = value;
                                     });
                                   },
                                   itemBuilder: (BuildContext context) {
@@ -203,7 +211,7 @@ class TellUsScreenState extends State<TellUsScreen> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          workList ?? 'Select work',
+                                          controller.selectedProfession.value ?? 'Select work',
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w600,
@@ -273,7 +281,7 @@ class TellUsScreenState extends State<TellUsScreen> {
                                   onSelected: (String value) {
                                     setState(() {
                                       FocusScope.of(context).unfocus();
-                                      workCityList = value;
+                                      controller.selectedCity.value = value;
                                     });
                                   },
                                   itemBuilder: (BuildContext context) {
@@ -302,7 +310,7 @@ class TellUsScreenState extends State<TellUsScreen> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          workCityList ?? 'Select city',
+                                          controller.selectedCity.value  ?? 'Select city',
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w600,
@@ -421,8 +429,17 @@ class TellUsScreenState extends State<TellUsScreen> {
                                     FocusScope.of(context).unfocus();
                                     if (_formKey.currentState!.validate() &&
                                         isTermsAccepted &&
-                                        workList != null &&
-                                        workCityList != null) {
+controller.selectedCity != null &&
+                                        controller.selectedProfession != null)
+                                    {
+                                      controller.sendLocationData(
+                                        fullName: controller.nameController.text,
+                                        profession:controller.selectedProfession.toString(),
+                                        city: controller.selectedCity.toString(),
+                                      );
+                                      print(controller.sendLocationData);
+
+
                                       Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(

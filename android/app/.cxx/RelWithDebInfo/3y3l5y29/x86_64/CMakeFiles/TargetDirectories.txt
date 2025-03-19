@@ -1,0 +1,2 @@
+C:/Users/jaisw/StudioProjects/need_to_assist_vendor/DS-Service/android/app/.cxx/RelWithDebInfo/3y3l5y29/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/jaisw/StudioProjects/need_to_assist_vendor/DS-Service/android/app/.cxx/RelWithDebInfo/3y3l5y29/x86_64/CMakeFiles/rebuild_cache.dir

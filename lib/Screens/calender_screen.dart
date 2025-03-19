@@ -1,7 +1,15 @@
 
+import 'dart:convert';
+
 import 'package:ds_service/AppsColor/app_color.dart';
 import 'package:ds_service/Resources/app_images.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -12,6 +20,83 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime? _selectedDay;
   final DateTime _focusedDay = DateTime.now();
   late final  Map<DateTime, Widget> _dayMarkers = {};
+
+  void _saveAvailabilityStatus(DateTime day, String status) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(day.toIso8601String(), status); // Convert DateTime to String
+  }
+
+
+  Future<String?> _getAvailabilityStatus(String day) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(day);
+  }
+  void _loadAvailabilityStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      _dayMarkers.forEach((date, value) async {
+        String dayKey = date.toIso8601String(); // Convert DateTime to String
+        String? status = prefs.getString(dayKey);
+
+        if (status == "Yes") {
+          _dayMarkers[date] = const Icon(Icons.done, color: Colors.green, size: 12);
+        } else if (status == "No") {
+          _dayMarkers[date] = const Icon(Icons.data_exploration_outlined, color: Colors.amber, size: 12);
+        }
+      });
+    });
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAvailabilityStatus();
+  }
+
+
+  Future<void> _submitAvailability(DateTime selectedDay, List<String> selectedSlots) async {
+    try {
+
+        User? user = FirebaseAuth.instance.currentUser;
+        if (user == null) {
+          Get.snackbar("Error", "User not logged in");
+          return;
+        }
+        String uid = user.uid;
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? vendorId = prefs.getString('vendor_id');
+
+
+        final response = await http.post(
+        Uri.parse('http://15.207.112.43:8080/api/vendor/markAvailability'), // Replace with your API URL
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "vendorId":vendorId ,
+          "availabilities": [
+            {
+              "date": DateFormat('yyyy-MM-dd').format(selectedDay),
+              "timeSlots": selectedSlots, // Send selected time slots
+              "status": selectedSlots.isEmpty ? "leave" : "working"
+            }
+          ]
+        }),
+      );
+
+      final responseData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        print("✅ Availability Updated: ${responseData['message']}");
+      } else {
+        print("❌ Failed to update availability: ${responseData['message']}");
+        print(uid);
+      }
+    } catch (e) {
+      print("❌ Error: $e");
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -91,7 +176,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: TableCalendar(
+                    child:
+                    TableCalendar(
                       firstDay: DateTime.now(),
                       lastDay: DateTime.utc(2100, 12, 31),
                       focusedDay: _focusedDay,
@@ -202,114 +288,67 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
 
+  Future<List<String>> _showTimeSlotDialog(DateTime selectedDay) async {
+    List<String> selectedSlots = []; // Declare before using it
 
-
-
-  void _showTimeSlotDialog(DateTime selectedDay) {
-    List<String> timeSlots = ['8-10 AM', '10-12 AM', '12-2 PM', '2-4 PM', '4-6 PM', '6-8 PM'];
-    Map<String, bool> selectedSlots = {
-      for (var slot in timeSlots) slot: false,
-    };
-
-    showDialog(
+    List<String>? result = await showDialog<List<String>>(
       context: context,
       builder: (context) {
-        return Dialog(
-          insetPadding: const EdgeInsets.all(10), // Makes dialog wider
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'Select Time Slots',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                StatefulBuilder(
-                  builder: (context, setDialogState) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: timeSlots.map((slot) {
-                        return Row(
-                          children: [
-                            Expanded(
-                              child: CheckboxListTile(
-                                title: Text(slot),
-                                value: selectedSlots[slot],
-                                onChanged: (isChecked) {
-                                  setDialogState(() {
-                                    selectedSlots[slot] = isChecked!;
-
-                                  });
-                                },
-                                activeColor: Colors.green,
-                                checkColor: Colors.white,
-                              ),
-                            ),
-                            if (!selectedSlots[slot]!) // Show "Cut" button only when not selected
-                              IconButton(
-                                icon: const Icon(Icons.close, color: Colors.red),
-                                onPressed: () {
-                                  setDialogState(() {
-                                    selectedSlots[slot] = false;
-                                  });
-                                },
-                              ),
-                          ],
-                        );
-                      }).toList(),
-                    );
-                  },
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        final workingSlots = selectedSlots.entries
-                            .where((entry) => entry.value)
-                            .map((entry) => entry.key)
-                            .toList();
-
-                        if (workingSlots.isNotEmpty) {
-                          setState(() {
-                            _dayMarkers[selectedDay] = const Icon(
-                              Icons.task_alt_outlined,
-                              color: Colors.green,
-                              size: 14,
-                            );
-                          });
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Working slots: ${workingSlots.join(", ")}'),
-                            ),
-                          );
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text("Select Time Slots"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CheckboxListTile(
+                    title: const Text("10:00-12:00"),
+                    value: selectedSlots.contains("10:00-12:00"),
+                    onChanged: (bool? value) {
+                      setDialogState(() {
+                        if (value == true) {
+                          selectedSlots.add("10:00-12:00");
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('No slots selected.')),
-                          );
+                          selectedSlots.remove("10:00-12:00");
                         }
-                      },
-                      child: const Text('Submit'),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
-                    ),
-                  ],
+                      });
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text("14:00-16:00"),
+                    value: selectedSlots.contains("14:00-16:00"),
+                    onChanged: (bool? value) {
+                      setDialogState(() {
+                        if (value == true) {
+                          selectedSlots.add("14:00-16:00");
+                        } else {
+                          selectedSlots.remove("14:00-16:00");
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, selectedSlots); // Return selected slots
+                  },
+                  child: const Text("OK"),
                 ),
               ],
-            ),
-          ),
+            );
+          },
         );
       },
     );
+
+    return result ?? []; // Ensure function always returns a list (empty if user cancels)
   }
+
+
+
+
 
 
 
@@ -440,13 +479,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       ),
                                   ),
                                     onPressed: () {
-
+                                      _saveAvailabilityStatus(selectedDay, "No");
+                                      _submitAvailability(selectedDay, [],);
                                       Navigator.pop(context);
-                                      _showLeaveConfirmationDialog(selectedDay);
                                       setState(() {
                                         _dayMarkers[selectedDay] =
                                         const Icon(Icons.data_exploration_outlined,color: Colors.amber,size: 12,);
                                       });
+                                      _showLeaveConfirmationDialog(selectedDay);
                                       // ScaffoldMessenger.of(context).showSnackBar(
                                       //   SnackBar(content: Text('Marked as leave.')),
                                       // );
@@ -466,8 +506,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                         borderRadius: BorderRadius.circular(8), // Rounded corners
                                       ),
                                     ),
-                                    onPressed: () {
-                                      _showTimeSlotDialog(selectedDay);
+                                    onPressed: () async{
+                                      List<String> selectedTimeSlots = await _showTimeSlotDialog(selectedDay);
+                                      if (selectedTimeSlots.isNotEmpty) {
+                                        _saveAvailabilityStatus(selectedDay , "Yes");
+                                        _submitAvailability(selectedDay, selectedTimeSlots,);
+                                      }
+                                      Navigator.pop(context);
+                                      setState(() {
+                                        _dayMarkers[selectedDay] =
+                                        const Icon(Icons.done,color: Colors.green,size: 12,);
+                                      });
                                     },
                                     child: const Text("Yes",style: TextStyle(color: Colors.white),)),
                               ),

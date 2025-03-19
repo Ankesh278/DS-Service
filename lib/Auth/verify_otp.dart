@@ -1,23 +1,29 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:ds_service/Auth/tell_us_screen.dart';
+import 'package:ds_service/Myscreens/hub_choose.dart';
 import 'package:ds_service/Resources/app_images.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import '../AppsColor/app_color.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
   final String phoneNumber;
+  final String verificationId;
 
-  const VerifyOtpScreen({super.key, required this.phoneNumber});
+  const VerifyOtpScreen({super.key, required this.phoneNumber, required this.verificationId});
 
   @override
   VerifyOtpScreenState createState() => VerifyOtpScreenState();
 }
 
 class VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
-  TextEditingController otpController = TextEditingController();
+  final TextEditingController otpController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   StreamController<ErrorAnimationType>? errorController;
   bool hasError = false;
   String currentText = "";
@@ -32,14 +38,15 @@ class VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
         overlays: SystemUiOverlay.values);
     errorController = StreamController<ErrorAnimationType>();
     startTimer();
-    listenForCode();
+
   }
 
   @override
   void dispose() {
-    otpController.dispose();
+
     errorController?.close();
     _timer?.cancel();
+    unregisterListener();
     super.dispose();
   }
 
@@ -66,27 +73,65 @@ class VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
         .showSnackBar(const SnackBar(content: Text('OTP Resent')));
   }
 
-  void verifyOtp() {
-    if (currentText.length != 4) {
+  @override
+  void codeUpdated() {
+    if (code != null) {
+      setState(() {
+        currentText = code!;
+        otpController.text = currentText;
+      });
+      verifyOtp();
+    }
+  }
+
+  void verifyOtp() async {
+    if (currentText.length != 6) {
       errorController!.add(ErrorAnimationType.shake);
       setState(() => hasError = true);
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('OTP Verified')));
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const TellUsScreen()),
+      return;
+    }
+
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+      verificationId: widget.verificationId,
+      smsCode: otpController.text.trim(),
+    );
+
+    try {
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      if (userCredential.user != null) {
+        String uid = userCredential.user!.uid;
+        await _sendPhoneNumberToApi(widget.phoneNumber,uid);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) =>  HubScreen()),
+        );
+      }
+    } catch (e) {
+      print("OTP Verification Failed: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("OTP Verification Failed")),
       );
     }
   }
 
-  @override
-  void codeUpdated() {
-    setState(() {
-      currentText = code ?? "";
-      otpController.text = currentText;
-    });
-    verifyOtp();
+  Future<void> _sendPhoneNumberToApi(
+      String phoneNumber,
+      String uid) async {
+    final response = await http.post(
+      Uri.parse('http://15.207.112.43:8080/api/vendor/vendordetails'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "phonenumber": phoneNumber,
+         "uid":uid,}),
+    );
+    print("API Response Code: ${response.statusCode}");
+    print("API Response Body: ${response.body}");
+
+    if (response.statusCode == 201) {
+      print("Phone number sent successfully");
+    } else {
+      print("Failed to send phone number");
+    }
   }
 
   String maskPhoneNumber(String phoneNumber) {
@@ -130,7 +175,7 @@ class VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Confirm OTP",
+                      const Text("Enter start job OTP",
                           style: TextStyle(
                               fontSize: 16,
                               color: AppColors.greyColor,
@@ -159,7 +204,7 @@ class VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
                     SizedBox(height: screenHeight * 0.4),
                     PinCodeTextField(
                       appContext: context,
-                      length: 4,
+                      length: 6,
                       obscureText: false,
                       animationType: AnimationType.fade,
                       cursorColor: Colors.white,
@@ -182,12 +227,13 @@ class VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
                       animationDuration: const Duration(milliseconds: 300),
                       enableActiveFill: true,
                       controller: otpController,
+                      errorAnimationController: errorController,
                       onCompleted: (value) {
                         setState(() {
                           FocusScope.of(context).unfocus();
                           currentText = value;
-                          verifyOtp();
                         });
+                        verifyOtp();
                       },
                       onChanged: (value) {
                         setState(() {
@@ -222,14 +268,9 @@ class VerifyOtpScreenState extends State<VerifyOtpScreen> with CodeAutoFill {
                       onPressed: verifyOtp,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
-                        padding: EdgeInsets.symmetric(
-                            vertical: screenHeight * 0.013),
-                        minimumSize:
-                            Size(screenWidth * 0.6, screenHeight * 0.02),
                         shape: const StadiumBorder(),
                       ),
-                      child: const Text('Verify OTP',
-                          style: TextStyle(color: Colors.white, fontSize: 12)),
+                      child: const Text('Verify OTP', style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),

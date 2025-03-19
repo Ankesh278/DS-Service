@@ -1,10 +1,9 @@
 import 'package:ds_service/AppsColor/app_color.dart';
 import 'package:ds_service/Auth/verify_otp.dart';
 import 'package:ds_service/Resources/app_images.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,19 +16,31 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchPhoneNumber();
+
   }
-  Future<void> _fetchPhoneNumber() async {
-    try {
-      String? phoneNumber = await SmsAutoFill().hint;
-      if (phoneNumber != null && phoneNumber.startsWith('+91')) {
-        _phoneController.text = phoneNumber.substring(3).trim();
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print("Error fetching phone number: $e");
-      }
-    }
+  Future<void> _sendOtp() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    await auth.verifyPhoneNumber(
+      phoneNumber: '+91${_phoneController.text}',
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await auth.signInWithCredential(credential);
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        print("Verification Failed: ${e.message}");
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerifyOtpScreen(
+              phoneNumber: _phoneController.text,
+              verificationId: verificationId,
+            ),
+          ),
+        );
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
   }
   @override
   Widget build(BuildContext context) {
@@ -156,14 +167,9 @@ class LoginScreenState extends State<LoginScreen> {
         onPressed: () {
           FocusScope.of(context).unfocus();
           if (_formKey.currentState?.validate() == true) {
+            _sendOtp();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Logging in...')),
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => VerifyOtpScreen(phoneNumber: _phoneController.text),
-              ),
             );
           }
         },
